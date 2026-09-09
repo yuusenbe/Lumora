@@ -1,0 +1,87 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --color-sage: #88A788;
+    --color-sage-hover: #759475;
+    --color-sage-light: #E8EFE8;
+    --color-mint: #C2E6CB;
+    --color-ivory: #F4F1E5;
+    --color-offwhite: #F8F9F3;
+    --color-slate-grey: #354546;
+    --color-slate-subtle: #67787A;
+  }
+
+  body {
+    background-color: #F8F9F3;
+    color: #354546;
+    font-family: -apple-system, BlinkMacSystemFont, "Plus Jakarta Sans", "Inter", "Segoe UI", Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+/* Custom serene cards with soft borders in the warm sage palette */
+.lumora-card {
+  background: #FFFFFF;
+  border-radius: 20px;
+  border: 1px solid #E5EAE3;
+  box-shadow: 0 4px 20px -2px rgba(53, 69, 70, 0.03), 0 2px 6px -1px rgba(53, 69, 70, 0.02);
+  transition: all 0.2s ease-in-out;
+}
+
+.lumora-card:hover {
+  border-color: #D3DCD0;
+  box-shadow: 0 10px 25px -3px rgba(53, 69, 70, 0.05), 0 4px 10px -2px rgba(53, 69, 70, 0.03);
+}
+
+.lumora-card-interactive {
+  cursor: pointer;
+}
+
+.lumora-card-interactive:active {
+  transform: scale(0.99);
+}
+
+/* Gentle pulsing indicator for capacity zones */
+@keyframes serene-pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.75;
+    transform: scale(1.04);
+  }
+}
+
+.serene-pulse {
+  animation: serene-pulse 3s infinite ease-in-out;
+}
+
+/* Smooth range slider track matching soft sage */
+input[type="range"] {
+  accent-color: #88A788;
+}
+
+/* Button utility classes for the new palette */
+.btn-sage-primary {
+  background-color: #88A788;
+  color: #FFFFFF;
+  transition: all 0.2s ease;
+}
+
+.btn-sage-primary:hover {
+  background-color: #759475;
+}
+
+.btn-sage-secondary {
+  background-color: #F4F1E5;
+  color: #354546;
+  border: 1px solid #E2DEC9;
+  transition: all 0.2s ease;
+}
+
+.btn-sage-secondary:hover {
+  background-color: #ECE8DA;
+}
