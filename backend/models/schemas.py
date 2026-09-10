@@ -124,6 +124,17 @@ class RecoveryItem(BaseModel):
     reason: str
     icon: str
 
+class SanctuaryStatus(BaseModel):
+    streak_days: int
+    streak_status: str  # active, frozen
+    plant_stage: str    # sprout, foliage, blooming_bonsai
+    plant_stage_name: str
+    plant_growth_percent: int
+    balance_points: int
+    status_headline: str
+    status_message: str
+    milestones: List[str]
+
 class WhatIfRequest(BaseModel):
     scenario: str
 

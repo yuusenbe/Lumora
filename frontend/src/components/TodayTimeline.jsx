@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import confetti from 'canvas-confetti';
 import {
   CheckCircle2,
@@ -12,7 +12,9 @@ import {
   ShoppingCart,
   ChevronRight,
   Shield,
-  Edit3
+  Edit3,
+  CalendarClock,
+  ArrowRight
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../api/client';
@@ -20,6 +22,7 @@ import TaskEditModal from './TaskEditModal';
 
 export default function TodayTimeline({ tasks, totalCount, onTaskUpdated }) {
   const { setCurrentView, triggerRefresh, editingTask, setEditingTask } = useAuth();
+  const [postponeMessage, setPostponeMessage] = useState('');
 
   const getCategoryIcon = (cat) => {
     switch (cat?.toLowerCase()) {
@@ -59,6 +62,19 @@ export default function TodayTimeline({ tasks, totalCount, onTaskUpdated }) {
     }
   };
 
+  const handlePostpone = async (task, e) => {
+    e.stopPropagation();
+    try {
+      const res = await api.postponeTask(task.id, 1);
+      setPostponeMessage(res.message || `Moved '${task.title}' to tomorrow. Energy preserved!`);
+      setTimeout(() => setPostponeMessage(''), 4000);
+      triggerRefresh();
+      if (onTaskUpdated) onTaskUpdated();
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   return (
     <div className="lumora-card p-6 sm:p-7 space-y-4">
       <div className="flex items-center justify-between border-b border-[#EEF2EC] pb-3">
@@ -84,6 +100,19 @@ export default function TodayTimeline({ tasks, totalCount, onTaskUpdated }) {
           <ChevronRight className="w-3.5 h-3.5" />
         </button>
       </div>
+
+      {/* Guilt-Free Postpone Positive Toast */}
+      {postponeMessage && (
+        <div className="p-3 rounded-xl bg-[#F0F6EF] border border-[#D0E2CF] text-[#335533] text-xs font-semibold flex items-center justify-between animate-in fade-in">
+          <div className="flex items-center space-x-2">
+            <Sparkles className="w-4 h-4 text-[#88A788]" />
+            <span>{postponeMessage}</span>
+          </div>
+          <button onClick={() => setPostponeMessage('')} className="text-[#557755] text-[11px] hover:underline">
+            Dismiss
+          </button>
+        </div>
+      )}
 
       {tasks && tasks.length > 0 ? (
         <div className="space-y-3">
@@ -164,22 +193,35 @@ export default function TodayTimeline({ tasks, totalCount, onTaskUpdated }) {
                       </span>
                     </div>
 
-                    {/* Meta info: duration & category */}
-                    <div className="flex items-center space-x-3 text-[11px] text-[#798990] pt-0.5">
-                      <span className="flex items-center space-x-1">
-                        <Icon className="w-3 h-3 text-[#8A9B9D]" />
-                        <span className="capitalize">{task.category}</span>
-                      </span>
-                      <span className="flex items-center space-x-1">
-                        <Clock className="w-3 h-3 text-[#88A788]" />
-                        <span>
-                          {(task.start_time || task.scheduled_start) && (task.end_time || task.scheduled_end)
-                            ? `${task.start_time || task.scheduled_start} - ${task.end_time || task.scheduled_end} (~${task.estimated_hours}h)`
-                            : `~${task.estimated_hours}h`}
+                    {/* Meta info: duration & category & Guilt-Free Postpone Action */}
+                    <div className="flex items-center justify-between gap-2 pt-0.5">
+                      <div className="flex items-center space-x-3 text-[11px] text-[#798990]">
+                        <span className="flex items-center space-x-1">
+                          <Icon className="w-3 h-3 text-[#8A9B9D]" />
+                          <span className="capitalize">{task.category}</span>
                         </span>
-                      </span>
-                      {task.flexibility === 'high' && (
-                        <span className="text-[#557755] font-semibold">Flexible</span>
+                        <span className="flex items-center space-x-1">
+                          <Clock className="w-3 h-3 text-[#88A788]" />
+                          <span>
+                            {(task.start_time || task.scheduled_start) && (task.end_time || task.scheduled_end)
+                              ? `${task.start_time || task.scheduled_start} - ${task.end_time || task.scheduled_end} (~${task.estimated_hours}h)`
+                              : `~${task.estimated_hours}h`}
+                          </span>
+                        </span>
+                        {task.flexibility === 'high' && (
+                          <span className="text-[#557755] font-semibold">Flexible</span>
+                        )}
+                      </div>
+
+                      {!isDone && (
+                        <button
+                          onClick={(e) => handlePostpone(task, e)}
+                          className="text-[10.5px] font-bold text-[#688868] hover:text-[#425E42] bg-[#F2F7F1] hover:bg-[#E5F0E3] px-2.5 py-1 rounded-lg transition-colors flex items-center space-x-1 cursor-pointer shrink-0 border border-[#DCE8DB]"
+                          title="Safely reschedule to tomorrow without overdue penalties"
+                        >
+                          <CalendarClock className="w-3 h-3 text-[#88A788]" />
+                          <span>Push to Tomorrow</span>
+                        </button>
                       )}
                     </div>
                   </div>

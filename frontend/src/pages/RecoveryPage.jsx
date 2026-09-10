@@ -12,14 +12,18 @@ import {
   Trees,
   Headphones
 } from 'lucide-react';
+import confetti from 'canvas-confetti';
 import { api } from '../api/client';
+import { useAuth } from '../context/AuthContext';
 
 export default function RecoveryPage() {
+  const { triggerRefresh } = useAuth();
   const [recommendations, setRecommendations] = useState([]);
   const [activeSession, setActiveSession] = useState(null);
   const [timerSeconds, setTimerSeconds] = useState(20 * 60);
   const [isTimerRunning, setIsTimerRunning] = useState(false);
   const [breathPhase, setBreathPhase] = useState('Inhale'); // Inhale (4s), Hold (4s), Exhale (4s)
+  const [sessionCompletedMsg, setSessionCompletedMsg] = useState('');
 
   useEffect(() => {
     async function load() {
@@ -68,8 +72,28 @@ export default function RecoveryPage() {
     setActiveSession(item);
     setTimerSeconds(20 * 60);
     setIsTimerRunning(true);
+    setSessionCompletedMsg('');
     try {
       await api.startRecovery(item.id);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const handleCompleteSession = async () => {
+    confetti({
+      particleCount: 40,
+      spread: 70,
+      origin: { y: 0.6 },
+      colors: ['#88A788', '#B3E8C0', '#F4F1E5', '#C2E6CB']
+    });
+
+    try {
+      const res = await api.completeRecovery(activeSession?.id);
+      setSessionCompletedMsg(res.message || 'Rest completed! +25 Points awarded to your Living Plant Sanctuary 🌿');
+      setActiveSession(null);
+      setIsTimerRunning(false);
+      triggerRefresh();
     } catch (e) {
       console.error(e);
     }
@@ -121,23 +145,45 @@ export default function RecoveryPage() {
             </div>
           </div>
 
-          <div className="flex items-center justify-between text-xs text-slate-300">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-slate-300">
             <p className="max-w-md">{activeSession.description}</p>
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-2 shrink-0">
               <button
                 onClick={() => setIsTimerRunning(!isTimerRunning)}
                 className="p-2 rounded-xl bg-[#88A788] hover:bg-[#759475] text-white transition-colors cursor-pointer"
+                title={isTimerRunning ? "Pause" : "Play"}
               >
                 {isTimerRunning ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
               </button>
               <button
                 onClick={() => setTimerSeconds(20 * 60)}
                 className="p-2 rounded-xl bg-[#4A5A5C] hover:bg-[#586A6C] text-slate-200 transition-colors cursor-pointer"
+                title="Reset timer"
               >
                 <RotateCcw className="w-4 h-4" />
               </button>
+              <button
+                onClick={handleCompleteSession}
+                className="px-3.5 py-2 rounded-xl bg-[#6E8E6E] hover:bg-[#5E7E5E] text-white font-bold transition-all shadow-xs flex items-center space-x-1.5 cursor-pointer"
+              >
+                <CheckCircle2 className="w-3.5 h-3.5" />
+                <span>Finish & Nurture Sanctuary 🌿</span>
+              </button>
             </div>
           </div>
+        </div>
+      )}
+
+      {/* Celebratory Completion Toast */}
+      {sessionCompletedMsg && (
+        <div className="p-4 rounded-2xl bg-[#EFF6EE] border border-[#CDE2CC] text-[#2F4F2F] text-xs font-semibold flex items-center justify-between animate-in fade-in shadow-xs">
+          <div className="flex items-center space-x-2">
+            <Sparkles className="w-4 h-4 text-[#88A788]" />
+            <span>{sessionCompletedMsg}</span>
+          </div>
+          <button onClick={() => setSessionCompletedMsg('')} className="text-[#557755] hover:underline">
+            Dismiss
+          </button>
         </div>
       )}
 

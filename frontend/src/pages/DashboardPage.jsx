@@ -14,6 +14,7 @@ import confetti from 'canvas-confetti';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../api/client';
 import CapacityCard from '../components/CapacityCard';
+import BalanceSanctuary from '../components/BalanceSanctuary';
 import LoadBreakdown from '../components/LoadBreakdown';
 import TodayTimeline from '../components/TodayTimeline';
 import CategoryCard from '../components/CategoryCard';
@@ -173,6 +174,12 @@ export default function DashboardPage() {
       <CapacityCard
         capacity={capacity}
         onRebalanceTrigger={() => loadDashboard()}
+      />
+
+      {/* Gamify Recovery: Balance Sanctuary & Anti-Streak */}
+      <BalanceSanctuary
+        sanctuary={dashboardData.sanctuary}
+        capacityScore={capacity?.capacity_score || 65}
       />
 
       {/* Suggested Rebalancing Banner (If overloaded or high) in Warm Ivory */}

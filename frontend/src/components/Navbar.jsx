@@ -120,11 +120,10 @@ export default function Navbar({ capacityData, onRefresh }) {
                 setCurrentView('dashboard');
                 setLifeAreasOpen(false);
               }}
-              className={`flex items-center space-x-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
-                currentView === 'dashboard'
+              className={`flex items-center space-x-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer ${currentView === 'dashboard'
                   ? 'bg-[#E8EFE8] text-[#354546] font-bold border border-[#D3DDD0] shadow-2xs'
                   : 'text-[#55696B] hover:text-[#354546] hover:bg-[#F2F6F1]'
-              }`}
+                }`}
             >
               <Compass className={`w-4 h-4 ${currentView === 'dashboard' ? 'text-[#6E8E6E]' : 'text-[#8A9B9D]'}`} />
               <span>Dashboard</span>
@@ -134,11 +133,10 @@ export default function Navbar({ capacityData, onRefresh }) {
             <div className="relative">
               <button
                 onClick={() => setLifeAreasOpen(!lifeAreasOpen)}
-                className={`flex items-center space-x-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
-                  isLifeAreaActive
+                className={`flex items-center space-x-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer ${isLifeAreaActive
                     ? 'bg-[#E8EFE8] text-[#354546] font-bold border border-[#D3DDD0] shadow-2xs'
                     : 'text-[#55696B] hover:text-[#354546] hover:bg-[#F2F6F1]'
-                }`}
+                  }`}
               >
                 <SlidersHorizontal className={`w-4 h-4 ${isLifeAreaActive ? 'text-[#6E8E6E]' : 'text-[#8A9B9D]'}`} />
                 <span>Life Areas</span>
@@ -161,9 +159,8 @@ export default function Navbar({ capacityData, onRefresh }) {
                             setCurrentView(cat.id);
                             setLifeAreasOpen(false);
                           }}
-                          className={`w-full text-left flex items-start space-x-2.5 p-2 rounded-xl transition-all cursor-pointer ${
-                            isCatActive ? 'bg-[#E8EFE8] text-[#354546]' : 'hover:bg-[#F4F8F3] text-slate-700'
-                          }`}
+                          className={`w-full text-left flex items-start space-x-2.5 p-2 rounded-xl transition-all cursor-pointer ${isCatActive ? 'bg-[#E8EFE8] text-[#354546]' : 'hover:bg-[#F4F8F3] text-slate-700'
+                            }`}
                         >
                           <div className="p-1.5 rounded-lg bg-[#F0F5EF] text-[#6E8E6E] shrink-0 mt-0.5">
                             <Icon className="w-3.5 h-3.5" />
@@ -186,11 +183,10 @@ export default function Navbar({ capacityData, onRefresh }) {
                 setCurrentView('tasks');
                 setLifeAreasOpen(false);
               }}
-              className={`flex items-center space-x-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
-                currentView === 'tasks'
+              className={`flex items-center space-x-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer ${currentView === 'tasks'
                   ? 'bg-[#E8EFE8] text-[#354546] font-bold border border-[#D3DDD0] shadow-2xs'
                   : 'text-[#55696B] hover:text-[#354546] hover:bg-[#F2F6F1]'
-              }`}
+                }`}
             >
               <CheckSquare className={`w-4 h-4 ${currentView === 'tasks' ? 'text-[#6E8E6E]' : 'text-[#8A9B9D]'}`} />
               <span>All Tasks</span>
@@ -202,11 +198,10 @@ export default function Navbar({ capacityData, onRefresh }) {
                 setCurrentView('recovery');
                 setLifeAreasOpen(false);
               }}
-              className={`flex items-center space-x-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
-                currentView === 'recovery'
+              className={`flex items-center space-x-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer ${currentView === 'recovery'
                   ? 'bg-[#E8EFE8] text-[#354546] font-bold border border-[#D3DDD0] shadow-2xs'
                   : 'text-[#55696B] hover:text-[#354546] hover:bg-[#F2F6F1]'
-              }`}
+                }`}
             >
               <HeartHandshake className={`w-4 h-4 ${currentView === 'recovery' ? 'text-[#6E8E6E]' : 'text-[#8A9B9D]'}`} />
               <span>Recovery</span>
@@ -218,11 +213,10 @@ export default function Navbar({ capacityData, onRefresh }) {
                 setCurrentView('whatif');
                 setLifeAreasOpen(false);
               }}
-              className={`flex items-center space-x-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
-                currentView === 'whatif'
+              className={`flex items-center space-x-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer ${currentView === 'whatif'
                   ? 'bg-[#E8EFE8] text-[#354546] font-bold border border-[#D3DDD0] shadow-2xs'
                   : 'text-[#55696B] hover:text-[#354546] hover:bg-[#F2F6F1]'
-              }`}
+                }`}
             >
               <HelpCircle className={`w-4 h-4 ${currentView === 'whatif' ? 'text-[#6E8E6E]' : 'text-[#8A9B9D]'}`} />
               <span>What-If</span>
@@ -231,6 +225,9 @@ export default function Navbar({ capacityData, onRefresh }) {
 
           {/* Right Action Area */}
           <div className="flex items-center space-x-2.5 shrink-0">
+            {/* Anti-Streak Sanctuary Badge */}
+
+
             {/* Live Capacity Pill in New Sage Style */}
             <div
               onClick={() => setCurrentView('dashboard')}
@@ -336,11 +333,10 @@ export default function Navbar({ capacityData, onRefresh }) {
               <button
                 key={item.id}
                 onClick={() => setCurrentView(item.id)}
-                className={`flex items-center space-x-1 px-3 py-1.5 rounded-xl text-xs whitespace-nowrap transition-all ${
-                  isActive
+                className={`flex items-center space-x-1 px-3 py-1.5 rounded-xl text-xs whitespace-nowrap transition-all ${isActive
                     ? 'bg-[#88A788] text-white font-bold shadow-2xs'
                     : 'text-[#55696B] hover:bg-[#F2F6F1] font-medium'
-                }`}
+                  }`}
               >
                 <Icon className="w-3.5 h-3.5" />
                 <span>{item.label}</span>

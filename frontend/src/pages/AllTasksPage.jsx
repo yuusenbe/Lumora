@@ -12,7 +12,8 @@ import {
   Filter,
   LayoutList,
   Calendar as CalendarIcon,
-  Edit3
+  Edit3,
+  CalendarClock
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../api/client';
@@ -25,13 +26,15 @@ export default function AllTasksPage() {
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [viewType, setViewType] = useState('list'); // 'list' | 'calendar'
+  const [postponeToast, setPostponeToast] = useState('');
 
   const loadTasks = async () => {
     try {
+      setLoading(true);
       const data = await api.getTasks(selectedCategory === 'all' ? null : selectedCategory);
       setTasks(data);
-    } catch (e) {
-      console.error(e);
+    } catch (err) {
+      console.error(err);
     } finally {
       setLoading(false);
     }
@@ -59,6 +62,17 @@ export default function AllTasksPage() {
       progress: nextProgress
     });
     triggerRefresh();
+  };
+
+  const handlePostpone = async (task) => {
+    try {
+      const res = await api.postponeTask(task.id, 1);
+      setPostponeToast(res.message || `Rescheduled '${task.title}' to tomorrow.`);
+      setTimeout(() => setPostponeToast(''), 4000);
+      triggerRefresh();
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const handleDelete = async (id) => {
@@ -144,6 +158,16 @@ export default function AllTasksPage() {
         </div>
       </div>
 
+      {/* Guilt-Free Postpone Positive Toast */}
+      {postponeToast && (
+        <div className="p-3.5 rounded-2xl bg-[#F0F6EF] border border-[#D0E2CF] text-[#335533] text-xs font-semibold flex items-center justify-between animate-in fade-in">
+          <span>{postponeToast}</span>
+          <button onClick={() => setPostponeToast('')} className="text-[#557755] text-xs hover:underline">
+            Dismiss
+          </button>
+        </div>
+      )}
+
       {/* Content: List View vs Calendar View */}
       {loading ? (
         <div className="lumora-card p-12 text-center text-[#798990]">
@@ -217,6 +241,16 @@ export default function AllTasksPage() {
                   </div>
 
                   <div className="flex items-center space-x-1 shrink-0">
+                    {!isDone && (
+                      <button
+                        onClick={() => handlePostpone(task)}
+                        className="text-[11px] font-bold text-[#557755] hover:text-[#385538] bg-[#F2F7F1] hover:bg-[#E2EEE1] px-2.5 py-1.5 rounded-xl transition-colors flex items-center space-x-1 cursor-pointer border border-[#D5E5D4]"
+                        title="Safely postpone to tomorrow without overdue penalties"
+                      >
+                        <CalendarClock className="w-3.5 h-3.5 text-[#88A788]" />
+                        <span>Push to Tomorrow</span>
+                      </button>
+                    )}
                     <button
                       onClick={() => setEditingTask(task)}
                       className="p-1.5 text-slate-400 hover:text-[#88A788] hover:bg-[#E8EFE8] rounded-lg transition-colors cursor-pointer"

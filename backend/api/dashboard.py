@@ -5,6 +5,7 @@ from ..database.connection import get_db
 from ..database.seed_data import DEMO_USER_ID
 from ..services.load_engine import calculate_workload
 from ..services.rebalance_engine import generate_rebalance_plan
+from ..services.sanctuary_service import get_sanctuary_status
 from ..models.schemas import WorkloadResponse
 
 router = APIRouter(tags=["dashboard"])
@@ -95,13 +96,16 @@ async def get_dashboard(authorization: Optional[str] = Header(None)):
                     "is_applied": False
                 }
 
+        sanctuary_data = get_sanctuary_status(workload.capacity_score, is_rebalanced=is_rebalanced)
+
         return {
             "student_name": user_name,
             "capacity": workload,
             "today_tasks": rule_of_three_tasks,
             "total_pending_count": total_today_count,
             "suggested_action": suggested_action,
-            "latest_checkin": checkin
+            "latest_checkin": checkin,
+            "sanctuary": sanctuary_data
         }
     finally:
         await db.close()

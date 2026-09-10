@@ -149,6 +149,43 @@ async def update_task(task_id: str, data: TaskUpdate, authorization: Optional[st
     finally:
         await db.close()
 
+@router.post("/tasks/{task_id}/postpone")
+async def postpone_task(task_id: str, days: int = 1, authorization: Optional[str] = Header(None)):
+    """
+    Guilt-Free Postponing (Anti-Fake Ticking):
+    Safely moves a task without red punitive warnings and affirms the student's energy boundary.
+    """
+    user_id = extract_user_id(authorization)
+    db = await get_db()
+    try:
+        cur = await db.execute("SELECT * FROM tasks WHERE id = ? AND user_id = ?", (task_id, user_id))
+        task = await cur.fetchone()
+        if not task:
+            raise HTTPException(status_code=404, detail="Task not found")
+
+        curr_date_str = task["scheduled_date"] or datetime.now().strftime("%Y-%m-%d")
+        try:
+            curr_date = datetime.strptime(curr_date_str, "%Y-%m-%d")
+        except Exception:
+            curr_date = datetime.now()
+
+        new_date = (curr_date + timedelta(days=days)).strftime("%Y-%m-%d")
+
+        await db.execute(
+            "UPDATE tasks SET scheduled_date = ?, scheduled_start = '10:00', scheduled_end = '12:00' WHERE id = ? AND user_id = ?",
+            (new_date, task_id, user_id)
+        )
+        await db.commit()
+
+        return {
+            "success": True,
+            "message": f"Wise choice! Rescheduled '{task['title']}' to {new_date}. Your evening energy is protected.",
+            "new_date": new_date,
+            "boundary_respected": True
+        }
+    finally:
+        await db.close()
+
 @router.delete("/tasks/{task_id}")
 async def delete_task(task_id: str, authorization: Optional[str] = Header(None)):
     user_id = extract_user_id(authorization)

@@ -1608,3 +1608,31 @@ The complete product can be represented as:
 # 37. Core MVP in One Line
 
 > **Don't just tell students they're overwhelmed — show them what is causing it, help them change it, and give them permission to recover.**
+
+---
+
+# 38. Mentor Feedback & Iteration: Retention Strategy
+
+During mentor reviews, a critical question was raised: **"How do we guarantee long-term consistent use?"**
+Standard productivity apps rely on "streaks" and user discipline. When students get overwhelmed, they stop opening the app.
+
+## Innovation: Proactive Intervention (The "Sunday Night Look-Ahead")
+Lumora flips the burden of engagement from the user to the system. 
+- **The Concept:** An Autopilot should steer *before* the crash. Lumora actively calculates the upcoming week's load. If Wednesday and Thursday are projected to hit >90% capacity, Lumora reaches out to the user on Sunday evening via push notification or email.
+- **The Message:** *"Alex, your Wednesday and Thursday are hitting a dangerous 94% load. Tap here to let me rebalance your week before it starts."*
+- **Why it works for Retention:** The user does not need to remember to open the app. The app proves its value passively and proactively, guaranteeing long-term reliance.
+
+---
+
+# 39. Mentor Feedback & Iteration: Honesty Strategy
+
+A second mentor challenge: **"How do we ensure users honestly complete tasks instead of just ticking them off without doing them?"**
+Users fake-tick tasks because standard apps use red "OVERDUE" text, which induces guilt. Ticking a box becomes the fastest way to relieve that UI-induced anxiety.
+
+## Innovation: Destigmatizing the "Snooze" (Guilt-Free Postponing)
+We remove the psychological incentive to lie by creating a "safe space" UI.
+- **The Concept:** Replace the standard `[ ] Done` binary checkbox with two equal paths:
+  1. `[✓] Complete`
+  2. `[→] Rebalance / Push Back`
+- **The Mechanic:** If a user chooses to postpone a task, they are not punished with "Overdue" badges. Instead, the AI celebrates it: *"Smart choice. Moving this to Friday protects your sleep tonight. Your load is back down to 75%."*
+- **Why it works for Honesty:** If a student is rewarded and validated for correctly identifying they are too tired to do a task, honesty becomes the path of least resistance.

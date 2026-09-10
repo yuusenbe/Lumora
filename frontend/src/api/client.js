@@ -135,6 +135,13 @@ export const api = {
     return handleResponse(res);
   },
 
+  getLatestCheckin: async () => {
+    const res = await fetch(`${API_BASE}/checkins/latest`, {
+      headers: getAuthHeader()
+    });
+    return handleResponse(res);
+  },
+
   getCheckinHistory: async () => {
     const res = await fetch(`${API_BASE}/checkins/history`, {
       headers: getAuthHeader()
@@ -183,7 +190,7 @@ export const api = {
     return handleResponse(res);
   },
 
-  // Recovery
+  // Recovery & Balance Sanctuary
   getRecoveryRecommendations: async () => {
     const res = await fetch(`${API_BASE}/recovery/recommendations`, {
       headers: getAuthHeader()
@@ -191,8 +198,32 @@ export const api = {
     return handleResponse(res);
   },
 
+  getSanctuary: async () => {
+    const res = await fetch(`${API_BASE}/recovery/sanctuary`, {
+      headers: getAuthHeader()
+    });
+    return handleResponse(res);
+  },
+
   startRecovery: async (itemId) => {
     const res = await fetch(`${API_BASE}/recovery/start?item_id=${itemId}`, {
+      method: 'POST',
+      headers: getAuthHeader()
+    });
+    return handleResponse(res);
+  },
+
+  completeRecovery: async (itemId = null) => {
+    const res = await fetch(`${API_BASE}/recovery/complete`, {
+      method: 'POST',
+      headers: getAuthHeader(),
+      body: JSON.stringify({ item_id: itemId })
+    });
+    return handleResponse(res);
+  },
+
+  postponeTask: async (taskId, days = 1) => {
+    const res = await fetch(`${API_BASE}/tasks/${taskId}/postpone?days=${days}`, {
       method: 'POST',
       headers: getAuthHeader()
     });
