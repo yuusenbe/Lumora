@@ -95,30 +95,36 @@ export default function MoodPage() {
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 animate-in fade-in">
       {/* Header */}
-      <div className="flex items-center space-x-3 border-b border-[#E5EAE3] pb-5">
-        <div className="w-12 h-12 rounded-2xl bg-[#E8EFE8] text-[#88A788] flex items-center justify-center">
+      <div className="flex items-center space-x-3.5 border-b border-[#D2E2D8] pb-5">
+        <div className="w-12 h-12 rounded-2xl bg-[#E3F2E9] text-[#1F6B4F] border border-[#C2E2D0] flex items-center justify-center shadow-2xs">
           <Smile className="w-6 h-6" />
         </div>
         <div>
-          <h1 className="text-xl font-extrabold text-[#354546] tracking-tight">Mood & Mental State</h1>
-          <p className="text-xs text-[#798990]">Tracking daily emotional bandwidth and cognitive saturation</p>
+          <h1 className="text-xl font-bold text-[#152F26] tracking-tight font-display">Mood & Mental State</h1>
+          <p className="text-xs text-[#638379]">Tracking daily emotional bandwidth and cognitive saturation</p>
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         {/* Left: Interactive Daily Checkin */}
-        <div className="lg:col-span-5 lumora-card p-6 sm:p-7 space-y-6">
-          <div className="border-b border-[#E5EAE3] pb-3">
-            <h3 className="text-sm font-bold text-[#354546]">Today's Check-in</h3>
-            <p className="text-xs text-[#798990]">How does your mind feel right now?</p>
+        <div
+          style={{
+            background: '#FFFFFF',
+            borderColor: '#D2E2D8'
+          }}
+          className="lg:col-span-5 lumora-card p-6 sm:p-7 space-y-6 shadow-xs border"
+        >
+          <div className="border-b border-[#D2E2D8] pb-3">
+            <h3 className="text-base font-bold text-[#152F26] font-display">Today's Check-in</h3>
+            <p className="text-xs text-[#638379]">How does your mind feel right now?</p>
           </div>
 
           <form onSubmit={handleSaveCheckin} className="space-y-5">
             {/* Stress Slider */}
             <div className="space-y-2">
-              <div className="flex justify-between text-xs font-semibold">
-                <span className="text-[#354546]">Perceived Stress</span>
-                <span className="text-[#88A788] font-bold">{stress} / 5</span>
+              <div className="flex justify-between text-xs font-bold">
+                <span className="text-[#152F26]">Perceived Stress</span>
+                <span className="text-[#D97706] font-bold">{stress} / 5</span>
               </div>
               <input
                 type="range"
@@ -126,9 +132,9 @@ export default function MoodPage() {
                 max="5"
                 value={stress}
                 onChange={(e) => setStress(parseInt(e.target.value))}
-                className="w-full h-2 bg-[#E8EFE8] rounded-lg cursor-pointer accent-[#88A788]"
+                className="w-full h-2 bg-[#E4ECE7] rounded-lg cursor-pointer accent-[#D97706]"
               />
-              <div className="flex justify-between text-[10px] text-[#798990]">
+              <div className="flex justify-between text-[10px] text-[#638379] font-medium">
                 <span>1 — Calm & centered</span>
                 <span>5 — Overwhelmed</span>
               </div>
@@ -136,9 +142,9 @@ export default function MoodPage() {
 
             {/* Mood Slider */}
             <div className="space-y-2">
-              <div className="flex justify-between text-xs font-semibold">
-                <span className="text-[#354546]">Mood Level</span>
-                <span className="text-[#88A788] font-bold">{mood} / 5</span>
+              <div className="flex justify-between text-xs font-bold">
+                <span className="text-[#152F26]">Mood Level</span>
+                <span className="text-[#1F6B4F] font-bold">{mood} / 5</span>
               </div>
               <input
                 type="range"
@@ -146,9 +152,9 @@ export default function MoodPage() {
                 max="5"
                 value={mood}
                 onChange={(e) => setMood(parseInt(e.target.value))}
-                className="w-full h-2 bg-[#E8EFE8] rounded-lg cursor-pointer accent-[#88A788]"
+                className="w-full h-2 bg-[#E4ECE7] rounded-lg cursor-pointer accent-[#1F6B4F]"
               />
-              <div className="flex justify-between text-[10px] text-[#798990]">
+              <div className="flex justify-between text-[10px] text-[#638379] font-medium">
                 <span>1 — Depleted</span>
                 <span>5 — Energized</span>
               </div>
@@ -156,9 +162,9 @@ export default function MoodPage() {
 
             {/* Mental Fatigue Slider */}
             <div className="space-y-2">
-              <div className="flex justify-between text-xs font-semibold">
-                <span className="text-[#354546]">Cognitive Fatigue</span>
-                <span className="text-[#88A788] font-bold">{mentalFatigue} / 5</span>
+              <div className="flex justify-between text-xs font-bold">
+                <span className="text-[#152F26]">Cognitive Fatigue</span>
+                <span className="text-[#2B6CB0] font-bold">{mentalFatigue} / 5</span>
               </div>
               <input
                 type="range"
@@ -166,9 +172,9 @@ export default function MoodPage() {
                 max="5"
                 value={mentalFatigue}
                 onChange={(e) => setMentalFatigue(parseInt(e.target.value))}
-                className="w-full h-2 bg-[#E8EFE8] rounded-lg cursor-pointer accent-[#88A788]"
+                className="w-full h-2 bg-[#E4ECE7] rounded-lg cursor-pointer accent-[#2B6CB0]"
               />
-              <div className="flex justify-between text-[10px] text-[#798990]">
+              <div className="flex justify-between text-[10px] text-[#638379] font-medium">
                 <span>1 — Fresh focus</span>
                 <span>5 — Heavy brain fog</span>
               </div>
@@ -176,20 +182,20 @@ export default function MoodPage() {
 
             {/* Optional reflection notes */}
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-[#354546]">Reflective note (optional)</label>
+              <label className="text-xs font-bold text-[#152F26]">Reflective note (optional)</label>
               <textarea
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
                 placeholder="e.g., Felt rushed before lecture, but study block went well."
                 rows={2}
-                className="w-full px-3 py-2 text-xs rounded-xl border border-[#D3DCD0] bg-[#F8F9F3] resize-none focus:outline-none focus:ring-2 focus:ring-[#88A788] text-[#354546]"
+                className="w-full px-3 py-2 text-xs rounded-xl border border-[#D2E2D8] bg-[#EDF3EE] resize-none focus:outline-none focus:ring-2 focus:ring-[#1F6B4F]/20 focus:border-[#1F6B4F] text-[#152F26]"
               />
             </div>
 
             <button
               type="submit"
               disabled={saving}
-              className="w-full py-3 rounded-2xl bg-[#88A788] hover:bg-[#759475] text-white text-xs font-bold transition-all shadow-sm flex items-center justify-center space-x-2 cursor-pointer"
+              className="btn-primary w-full py-3.5 rounded-xl text-white text-xs font-bold transition-all shadow-xs flex items-center justify-center space-x-2 cursor-pointer"
             >
               {saving ? <span>Logging check-in...</span> : (
                 <>
@@ -200,7 +206,7 @@ export default function MoodPage() {
             </button>
 
             {savedSuccess && (
-              <p className="text-xs text-center text-[#88A788] font-semibold flex items-center justify-center space-x-1">
+              <p className="text-xs text-center text-[#1F6B4F] font-bold flex items-center justify-center space-x-1">
                 <CheckCircle2 className="w-3.5 h-3.5" />
                 <span>Check-in recorded! Capacity recalibrated.</span>
               </p>
@@ -209,49 +215,56 @@ export default function MoodPage() {
         </div>
 
         {/* Right: Trend Visualization */}
-        <div className="lg:col-span-7 lumora-card p-6 sm:p-7 space-y-5 flex flex-col justify-between">
-          <div className="border-b border-[#E5EAE3] pb-3">
-            <h3 className="text-sm font-bold text-[#354546]">Weekly Stress & Bandwidth Trend</h3>
-            <p className="text-xs text-[#798990]">Visualizing pressure patterns across your semester</p>
+        <div
+          style={{
+            background: '#FFFFFF',
+            borderColor: '#D2E2D8'
+          }}
+          className="lg:col-span-7 lumora-card p-6 sm:p-7 space-y-5 flex flex-col justify-between shadow-xs border"
+        >
+          <div className="border-b border-[#D2E2D8] pb-3">
+            <h3 className="text-base font-bold text-[#152F26] font-display">Weekly Stress & Bandwidth Trend</h3>
+            <p className="text-xs text-[#638379]">Visualizing pressure patterns across your semester</p>
           </div>
 
           <div className="h-64 w-full pt-2">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={history} margin={{ top: 10, right: 15, left: -20, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E5EAE3" />
-                <XAxis dataKey="date" tick={{ fontSize: 11, fill: '#798990' }} />
-                <YAxis domain={[1, 5]} ticks={[1, 2, 3, 4, 5]} tick={{ fontSize: 11, fill: '#798990' }} />
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#D2E2D8" />
+                <XAxis dataKey="date" tick={{ fontSize: 11, fill: '#638379' }} />
+                <YAxis domain={[1, 5]} ticks={[1, 2, 3, 4, 5]} tick={{ fontSize: 11, fill: '#638379' }} />
                 <Tooltip
                   contentStyle={{
                     backgroundColor: '#FFFFFF',
                     borderRadius: '12px',
-                    boxShadow: '0 4px 20px -2px rgba(53,69,70,0.1)',
-                    border: '1px solid #E5EAE3',
-                    fontSize: '12px'
+                    boxShadow: '0 4px 20px -2px rgba(21, 47, 38, 0.08)',
+                    border: '1px solid #D2E2D8',
+                    fontSize: '12px',
+                    color: '#152F26'
                   }}
                 />
                 <Line
                   type="monotone"
                   dataKey="stress"
                   name="Stress Level"
-                  stroke="#C89B6D"
+                  stroke="#D97706"
                   strokeWidth={2.5}
-                  dot={{ r: 4 }}
+                  dot={{ r: 4, fill: '#D97706' }}
                 />
                 <Line
                   type="monotone"
                   dataKey="mood"
                   name="Mood Bandwidth"
-                  stroke="#88A788"
+                  stroke="#1F6B4F"
                   strokeWidth={2.5}
-                  dot={{ r: 4 }}
+                  dot={{ r: 4, fill: '#1F6B4F' }}
                 />
               </LineChart>
             </ResponsiveContainer>
           </div>
 
-          <div className="p-3.5 rounded-xl bg-[#F8F9F3] border border-[#E5EAE3] text-xs text-[#354546] leading-relaxed">
-            <strong className="text-[#354546]">Observation:</strong> When stress remains at 4+ for consecutive days, the recommendation engine automatically increases buffer times around your focus blocks.
+          <div className="p-4 rounded-xl bg-[#EDF3EE] border border-[#D2E2D8] text-xs text-[#638379] leading-relaxed">
+            <strong className="text-[#152F26] font-bold">Observation:</strong> When stress remains at 4+ for consecutive days, the recommendation engine automatically increases buffer times around your focus blocks.
           </div>
         </div>
       </div>

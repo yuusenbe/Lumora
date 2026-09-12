@@ -159,37 +159,32 @@ export default function SmartCaptureModal({ isOpen, onClose, onTaskCreated }) {
   };
 
   const handleSaveToWeek = async () => {
+    if (!title.trim()) return;
+
     setSaving(true);
     try {
-      await api.createTask({
-        title: title || inputPrompt,
+      const result = await api.createTask({
+        title: title.trim(),
         category,
-        priority,
         estimated_hours: parseFloat(hours) || 2.0,
-        deadline: deadline || null,
-        scheduled_date: scheduledDate || undefined,
-        energy_required: priority === 'high' ? 'high' : 'medium',
-        flexibility,
+        deadline: scheduledDate || deadline || 'This week',
+        scheduled_date: scheduledDate || null,
+        scheduled_start: isTimeSpecific && startTime ? startTime : null,
+        scheduled_end: isTimeSpecific && endTime ? endTime : null,
         start_time: isTimeSpecific && startTime ? startTime : null,
         end_time: isTimeSpecific && endTime ? endTime : null,
-        scheduled_start: isTimeSpecific && startTime ? startTime : null,
-        scheduled_end: isTimeSpecific && endTime ? endTime : null
+        priority,
+        flexibility
       });
 
-      // Recalculate capacity to check for overload
-      const dashboard = await api.getDashboard();
-      if (dashboard.capacity?.needs_rebalance) {
-        const plan = await api.simulateRebalance();
-        setActiveRebalancePlan(plan);
-        onClose();
+      if (onTaskCreated) onTaskCreated(result.task);
+
+      if (result.needs_rebalance && result.rebalance_plan) {
+        setActiveRebalancePlan(result.rebalance_plan);
         setRebalanceModalOpen(true);
-      } else {
-        onClose();
       }
 
-      if (onTaskCreated) onTaskCreated();
-      setInputPrompt('');
-      setParsedResult(null);
+      handleClose();
     } catch (err) {
       console.error(err);
     } finally {
@@ -198,22 +193,22 @@ export default function SmartCaptureModal({ isOpen, onClose, onTaskCreated }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm animate-in fade-in">
-      <div className="w-full max-w-xl bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[90vh]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#152F26]/40 backdrop-blur-sm animate-in fade-in">
+      <div className="w-full max-w-xl bg-white rounded-3xl shadow-2xl border border-[#D2E2D8] overflow-hidden flex flex-col max-h-[90vh]">
         {/* Header */}
-        <div className="px-6 pt-5 pb-4 border-b border-[#EEF2EC] flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 rounded-xl bg-[#E8EFE8] text-[#557755] flex items-center justify-center">
-              <Sparkles className="w-4 h-4" />
+        <div className="px-6 pt-5 pb-4 border-b border-[#D2E2D8] flex items-center justify-between">
+          <div className="flex items-center space-x-3">
+            <div className="w-9 h-9 rounded-2xl bg-[#E3F2E9] text-[#1F6B4F] border border-[#C2E2D0] flex items-center justify-center">
+              <Sparkles className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="text-base font-bold text-[#354546]">Smart Capture</h2>
-              <p className="text-xs text-[#798990]">Express what you're carrying in your own words</p>
+              <h2 className="text-base font-bold text-[#152F26] font-display">Smart Capture</h2>
+              <p className="text-xs text-[#638379]">Express what you're carrying in your own words</p>
             </div>
           </div>
           <button
             onClick={handleClose}
-            className="p-1.5 rounded-xl text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors cursor-pointer"
+            className="p-1.5 rounded-xl text-[#638379] hover:text-[#152F26] hover:bg-[#EDF3EE] transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -223,20 +218,20 @@ export default function SmartCaptureModal({ isOpen, onClose, onTaskCreated }) {
         <div className="p-6 overflow-y-auto space-y-4">
           {/* Natural language input */}
           <div className="space-y-2">
-            <label className="text-xs font-semibold text-[#354546]">What's on your mind?</label>
+            <label className="text-xs font-bold text-[#152F26]">What's on your mind?</label>
             <div className="relative">
               <textarea
                 value={inputPrompt}
                 onChange={(e) => setInputPrompt(e.target.value)}
                 placeholder="e.g., I need to finish my FYP methodology by Thursday and it probably takes around 4 hours."
                 rows={3}
-                className="w-full px-4 py-3 rounded-2xl border border-[#E2E8DF] focus:outline-none focus:ring-2 focus:ring-[#88A788] focus:border-transparent text-sm text-[#354546] placeholder:text-[#9AABAE] resize-none bg-[#FAFBF8]"
+                className="w-full px-4 py-3 rounded-2xl border border-[#D2E2D8] focus:outline-none focus:ring-2 focus:ring-[#1F6B4F]/20 focus:border-[#1F6B4F] text-sm text-[#152F26] placeholder:text-[#638379]/60 resize-none bg-[#EDF3EE]"
               />
             </div>
 
             {/* Quick Demo Chips */}
             <div className="space-y-1.5 pt-1">
-              <p className="text-[11px] font-medium text-[#798990]">Quick student scenarios:</p>
+              <p className="text-[11px] font-medium text-[#638379]">Quick student scenarios:</p>
               <div className="flex flex-wrap gap-1.5">
                 {demoChips.map((chip, idx) => (
                   <button
@@ -246,7 +241,7 @@ export default function SmartCaptureModal({ isOpen, onClose, onTaskCreated }) {
                       setInputPrompt(chip);
                       handleParse(chip);
                     }}
-                    className="text-[11px] px-2.5 py-1 rounded-lg bg-[#F2F6F1] hover:bg-[#E8EFE8] hover:text-[#354546] text-[#55696B] transition-colors cursor-pointer text-left border border-[#DFE6DC]"
+                    className="text-[11px] px-2.5 py-1 rounded-lg bg-[#EDF3EE] hover:bg-[#E3F2E9] hover:text-[#152F26] text-[#638379] transition-colors cursor-pointer text-left border border-[#D2E2D8]"
                   >
                     "{chip}"
                   </button>
@@ -259,7 +254,7 @@ export default function SmartCaptureModal({ isOpen, onClose, onTaskCreated }) {
                 type="button"
                 onClick={() => handleParse()}
                 disabled={parsing || !inputPrompt.trim()}
-                className="flex items-center space-x-1.5 px-4 py-2 rounded-xl bg-[#88A788] hover:bg-[#759475] text-white text-xs font-bold transition-all disabled:opacity-50 cursor-pointer shadow-xs"
+                className="btn-primary flex items-center space-x-1.5 px-4 py-2 rounded-xl text-white text-xs font-bold transition-all disabled:opacity-50 cursor-pointer shadow-xs"
               >
                 {parsing ? (
                   <>
@@ -268,7 +263,7 @@ export default function SmartCaptureModal({ isOpen, onClose, onTaskCreated }) {
                   </>
                 ) : (
                   <>
-                    <Sparkles className="w-3.5 h-3.5 text-[#EDFFEE]" />
+                    <Sparkles className="w-3.5 h-3.5 text-[#D1F0DE]" />
                     <span>Extract with AI</span>
                   </>
                 )}
@@ -278,15 +273,15 @@ export default function SmartCaptureModal({ isOpen, onClose, onTaskCreated }) {
 
           {/* AI UNDERSTANDS PREVIEW */}
           {parsedResult && (
-            <div className="rounded-2xl border border-[#D3DDD0] bg-[#F4F8F3] p-4 space-y-3 animate-in fade-in">
+            <div className="rounded-2xl border border-[#D2E2D8] bg-[#EDF3EE] p-4 space-y-3 animate-in fade-in">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-[#354546] uppercase tracking-wider flex items-center space-x-1.5">
-                  <Check className="w-3.5 h-3.5 text-[#88A788]" />
+                <span className="text-xs font-bold text-[#152F26] uppercase tracking-wider flex items-center space-x-1.5">
+                  <Check className="w-3.5 h-3.5 text-[#1F6B4F]" />
                   <span>AI Understands</span>
                 </span>
                 <button
                   onClick={() => setIsEditingManual(!isEditingManual)}
-                  className="text-xs text-[#557755] hover:underline font-semibold"
+                  className="text-xs text-[#1F6B4F] hover:underline font-bold cursor-pointer"
                 >
                   {isEditingManual ? 'Done editing' : 'Edit details'}
                 </button>
@@ -294,20 +289,20 @@ export default function SmartCaptureModal({ isOpen, onClose, onTaskCreated }) {
 
               {/* AI Recommended Clash-Free Execution Window */}
               {recommendedSlots && recommendedSlots.length > 0 && (
-                <div className="p-3.5 rounded-2xl bg-gradient-to-br from-[#F2F7F1] to-[#E8F1E6] border border-[#C6DAC5] space-y-3 shadow-xs animate-in fade-in">
+                <div className="p-4 rounded-2xl bg-[#E3F2E9] border border-[#C2E2D0] space-y-3 shadow-xs animate-in fade-in">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-1.5">
-                      <Sparkles className="w-3.5 h-3.5 text-[#4E704E]" />
-                      <span className="text-xs font-bold text-[#2A3E2A]">
+                      <Sparkles className="w-3.5 h-3.5 text-[#1F6B4F]" />
+                      <span className="text-xs font-bold text-[#152F26]">
                         AI Recommended Execution Window
                       </span>
                     </div>
-                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#E0ECE0] text-[#3E5C3E] border border-[#C7DCC6]">
-                      0 Clashes • Buffer Ahead of Sunday
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#C2E2D0] text-[#152F26] border border-[#A5D4BA]">
+                      0 Clashes • Buffer Preserved
                     </span>
                   </div>
 
-                  <p className="text-[11px] text-[#55696B] leading-relaxed">
+                  <p className="text-[11px] text-[#638379] leading-relaxed">
                     Lumora scanned Alex's schedule and found clash-free windows that protect workload capacity:
                   </p>
 
@@ -319,28 +314,28 @@ export default function SmartCaptureModal({ isOpen, onClose, onTaskCreated }) {
                           key={sIdx}
                           type="button"
                           onClick={() => handleSelectSlot(slot, sIdx)}
-                          className={`p-2.5 rounded-xl border text-left transition-all cursor-pointer flex flex-col justify-between ${
+                          className={`p-3 rounded-xl border text-left transition-all cursor-pointer flex flex-col justify-between ${
                             isSelected
-                              ? 'bg-white border-[#88A788] shadow-sm ring-2 ring-[#88A788]/30'
-                              : 'bg-white/80 hover:bg-white border-[#D9E4D7] text-[#55696B]'
+                              ? 'bg-white border-[#1F6B4F] shadow-xs ring-2 ring-[#1F6B4F]/20'
+                              : 'bg-white/80 hover:bg-white border-[#D2E2D8] text-[#638379]'
                           }`}
                         >
                           <div>
                             <div className="flex items-center justify-between">
-                              <span className={`text-xs font-bold ${isSelected ? 'text-[#2D452D]' : 'text-[#354546]'}`}>
+                              <span className={`text-xs font-bold ${isSelected ? 'text-[#152F26]' : 'text-[#638379]'}`}>
                                 {slot.day_name.split(',')[0]}
                               </span>
                               {slot.is_primary && (
-                                <span className="text-[9px] font-extrabold uppercase px-1.5 py-0.2 rounded bg-[#88A788] text-white">
+                                <span className="text-[9px] font-extrabold uppercase px-1.5 py-0.5 rounded bg-[#1F6B4F] text-white">
                                   Optimal
                                 </span>
                               )}
                             </div>
-                            <p className="text-xs font-bold text-[#354546] mt-0.5">
+                            <p className="text-xs font-bold text-[#152F26] mt-0.5">
                               {slot.start_time} – {slot.end_time}
                             </p>
                           </div>
-                          <p className="text-[9px] text-[#557755] mt-1.5 font-medium leading-tight">
+                          <p className="text-[10px] text-[#1F6B4F] mt-1.5 font-medium leading-tight">
                             {slot.reason.split('•')[1]?.trim() || slot.reason}
                           </p>
                         </button>
@@ -349,20 +344,20 @@ export default function SmartCaptureModal({ isOpen, onClose, onTaskCreated }) {
                   </div>
 
                   {/* Preferable Date Selector */}
-                  <div className="pt-2 flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-t border-[#D7E3D6]">
+                  <div className="pt-2 flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-t border-[#C2E2D0]">
                     <div className="flex items-center space-x-1.5">
-                      <Calendar className="w-3.5 h-3.5 text-[#557755]" />
-                      <span className="text-[11px] font-bold text-[#354546]">Prefer another day?</span>
+                      <Calendar className="w-3.5 h-3.5 text-[#1F6B4F]" />
+                      <span className="text-[11px] font-bold text-[#152F26]">Prefer another day?</span>
                     </div>
                     <div className="flex items-center space-x-2">
                       <input
                         type="date"
                         value={scheduledDate}
                         onChange={(e) => handlePreferableDateChange(e.target.value)}
-                        className="text-xs px-2.5 py-1 rounded-lg border border-[#CADBC9] bg-white text-[#354546] font-medium cursor-pointer"
+                        className="text-xs px-2.5 py-1 rounded-lg border border-[#D2E2D8] bg-white text-[#152F26] font-medium cursor-pointer"
                       />
                       {isFindingSlots && (
-                        <Loader2 className="w-3.5 h-3.5 animate-spin text-[#88A788]" />
+                        <Loader2 className="w-3.5 h-3.5 animate-spin text-[#1F6B4F]" />
                       )}
                     </div>
                   </div>
@@ -370,86 +365,86 @@ export default function SmartCaptureModal({ isOpen, onClose, onTaskCreated }) {
               )}
 
               {!isEditingManual ? (
-                <div className="space-y-2 bg-white/90 p-4 rounded-xl border border-[#E5EAE3] shadow-xs">
+                <div className="space-y-2 bg-white p-4 rounded-xl border border-[#D2E2D8] shadow-2xs">
                   <div className="flex items-center space-x-2">
-                    <span className="text-base font-bold text-[#354546]">{title}</span>
+                    <span className="text-base font-bold text-[#152F26]">{title}</span>
                     {isTimeSpecific && (
-                      <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#E8EFE8] text-[#354546] border border-[#88A788]/40">
+                      <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#EDF3EE] text-[#152F26] border border-[#D2E2D8]">
                         Fixed Anchor
                       </span>
                     )}
                   </div>
-                  <div className="grid grid-cols-2 gap-2 text-xs text-[#55696B] pt-1">
+                  <div className="grid grid-cols-2 gap-2 text-xs text-[#638379] pt-1">
                     <div className="flex items-center space-x-1.5">
-                      <Clock className="w-3.5 h-3.5 text-[#88A788]" />
+                      <Clock className="w-3.5 h-3.5 text-[#638379]" />
                       {isTimeSpecific && startTime ? (
-                        <span className="font-bold text-[#354546]">{startTime} – {endTime || '?'} (~{hours}h)</span>
+                        <span className="font-bold text-[#152F26]">{startTime} – {endTime || '?'} (~{hours}h)</span>
                       ) : (
                         <span>~{hours} hours (flexible)</span>
                       )}
                     </div>
                     <div className="flex items-center space-x-1.5">
-                      <Tag className="w-3.5 h-3.5 text-[#8A9B9D]" />
+                      <Tag className="w-3.5 h-3.5 text-[#638379]" />
                       <span className="capitalize">{category}</span>
                     </div>
                     <div className="flex items-center space-x-1.5">
-                      <Calendar className="w-3.5 h-3.5 text-[#8A9B9D]" />
+                      <Calendar className="w-3.5 h-3.5 text-[#638379]" />
                       <span>{scheduledDate ? `${scheduledDate} (${deadline || 'Target'})` : (deadline ? `Due ${deadline}` : 'Flexible timing')}</span>
                     </div>
                     <div className="flex items-center space-x-1.5">
-                      <Zap className="w-3.5 h-3.5 text-[#8A9B9D]" />
+                      <Zap className="w-3.5 h-3.5 text-[#638379]" />
                       <span className="capitalize">{priority} Priority</span>
                     </div>
                   </div>
-                  <p className="text-[11px] text-[#557755] pt-1 italic">
+                  <p className="text-[11px] text-[#1F6B4F] pt-1 italic font-medium">
                     {parsedResult.raw_understanding}
                   </p>
                 </div>
               ) : (
                 /* Editable Form */
-                <div className="space-y-3 bg-white p-4 rounded-xl border border-slate-200">
+                <div className="space-y-3 bg-white p-4 rounded-xl border border-[#D2E2D8]">
                   <div>
-                    <label className="text-xs font-medium text-slate-600">Task Title</label>
+                    <label className="text-xs font-bold text-[#152F26]">Task Title</label>
                     <input
                       type="text"
                       value={title}
                       onChange={(e) => setTitle(e.target.value)}
-                      className="w-full mt-1 px-3 py-1.5 text-xs rounded-lg border border-slate-200"
+                      className="w-full mt-1 px-3 py-1.5 text-xs rounded-lg border border-[#D2E2D8] focus:ring-2 focus:ring-[#1F6B4F]/20 focus:border-[#1F6B4F] text-[#152F26]"
                     />
                   </div>
 
                   {/* Specific Time Window Toggle */}
-                  <div className="flex items-center justify-between p-2.5 rounded-xl bg-[#F8F9F3] border border-[#E5EAE3]">
+                  <div className="flex items-center justify-between p-2.5 rounded-xl bg-[#EDF3EE] border border-[#D2E2D8]">
                     <div>
-                      <span className="text-xs font-bold text-[#354546]">Specific Time Window</span>
-                      <p className="text-[10px] text-[#798990]">For fixed commitments (shifts, lectures, meetings)</p>
+                      <span className="text-xs font-bold text-[#152F26]">Specific Time Window</span>
+                      <p className="text-[10px] text-[#638379]">For fixed commitments (shifts, lectures, meetings)</p>
                     </div>
                     <input
                       type="checkbox"
                       checked={isTimeSpecific}
                       onChange={(e) => setIsTimeSpecific(e.target.checked)}
-                      className="w-4 h-4 accent-[#88A788] cursor-pointer"
+                      className="w-4 h-4 accent-[#1F6B4F] cursor-pointer"
                     />
                   </div>
 
                   {isTimeSpecific && (
-                    <div className="grid grid-cols-2 gap-3 p-2.5 rounded-xl bg-[#F4F1E5]/40 border border-[#E2DEC9]">
+                    <div className="grid grid-cols-2 gap-3 p-2.5 rounded-xl bg-[#EDF3EE] border border-[#D2E2D8]">
                       <div>
-                        <label className="text-[11px] font-bold text-[#354546]">Start Time</label>
+                        <label className="text-[11px] font-bold text-[#152F26]">Start Time</label>
                         <input
                           type="time"
                           value={startTime}
                           onChange={(e) => handleTimeChange(e.target.value, endTime)}
-                          className="w-full mt-1 px-3 py-1.5 text-xs rounded-lg border border-[#D3DCD0] bg-white text-[#354546]"
+                          className="w-full mt-1 px-3 py-1.5 text-xs rounded-lg border border-[#D2E2D8] bg-white text-[#152F26]"
                         />
                       </div>
                       <div>
-                        <label className="text-[11px] font-bold text-[#354546]">End Time</label>
+                        <label className="text-[11px] font-bold text-[#152F26]">End Time</label>
                         <input
                           type="time"
                           value={endTime}
                           onChange={(e) => handleTimeChange(startTime, e.target.value)}
-                          className="w-full mt-1 px-3 py-1.5 text-xs rounded-lg border border-[#D3DCD0] bg-white text-[#354546]"
+                          className="w-full mt-1 px-3 py-1.5 text-xs rounded-lg border border-[#D2E2D8] bg-white text-[#152F26]"
                         />
                       </div>
                     </div>
@@ -457,11 +452,11 @@ export default function SmartCaptureModal({ isOpen, onClose, onTaskCreated }) {
 
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="text-xs font-medium text-slate-600">Category</label>
+                      <label className="text-xs font-bold text-[#152F26]">Category</label>
                       <select
                         value={category}
                         onChange={(e) => setCategory(e.target.value)}
-                        className="w-full mt-1 px-3 py-1.5 text-xs rounded-lg border border-slate-200"
+                        className="w-full mt-1 px-3 py-1.5 text-xs rounded-lg border border-[#D2E2D8] text-[#152F26]"
                       >
                         <option value="academic">Academic</option>
                         <option value="work">Work</option>
@@ -471,40 +466,40 @@ export default function SmartCaptureModal({ isOpen, onClose, onTaskCreated }) {
                       </select>
                     </div>
                     <div>
-                      <label className="text-xs font-medium text-slate-600">Total Hours</label>
+                      <label className="text-xs font-bold text-[#152F26]">Total Hours</label>
                       <input
                         type="number"
                         step="0.5"
                         value={hours}
                         onChange={(e) => setHours(e.target.value)}
-                        className="w-full mt-1 px-3 py-1.5 text-xs rounded-lg border border-slate-200"
+                        className="w-full mt-1 px-3 py-1.5 text-xs rounded-lg border border-[#D2E2D8] text-[#152F26]"
                       />
                     </div>
                     <div>
-                      <label className="text-xs font-medium text-slate-600">Target Day / Deadline</label>
+                      <label className="text-xs font-bold text-[#152F26]">Target Day / Deadline</label>
                       <input
                         type="text"
                         value={deadline}
                         onChange={(e) => setDeadline(e.target.value)}
                         placeholder="e.g. Thursday"
-                        className="w-full mt-1 px-3 py-1.5 text-xs rounded-lg border border-slate-200"
+                        className="w-full mt-1 px-3 py-1.5 text-xs rounded-lg border border-[#D2E2D8] text-[#152F26]"
                       />
                     </div>
                     <div>
-                      <label className="text-xs font-medium text-slate-600">Scheduled Date</label>
+                      <label className="text-xs font-bold text-[#152F26]">Scheduled Date</label>
                       <input
                         type="date"
                         value={scheduledDate}
                         onChange={(e) => setScheduledDate(e.target.value)}
-                        className="w-full mt-1 px-3 py-1.5 text-xs rounded-lg border border-slate-200 text-slate-700"
+                        className="w-full mt-1 px-3 py-1.5 text-xs rounded-lg border border-[#D2E2D8] text-[#152F26]"
                       />
                     </div>
                     <div>
-                      <label className="text-xs font-medium text-slate-600">Flexibility</label>
+                      <label className="text-xs font-bold text-[#152F26]">Flexibility</label>
                       <select
                         value={flexibility}
                         onChange={(e) => setFlexibility(e.target.value)}
-                        className="w-full mt-1 px-3 py-1.5 text-xs rounded-lg border border-slate-200"
+                        className="w-full mt-1 px-3 py-1.5 text-xs rounded-lg border border-[#D2E2D8] text-[#152F26]"
                       >
                         <option value="high">High (can float / move)</option>
                         <option value="medium">Medium</option>
@@ -520,7 +515,7 @@ export default function SmartCaptureModal({ isOpen, onClose, onTaskCreated }) {
                   type="button"
                   onClick={handleSaveToWeek}
                   disabled={saving}
-                  className="w-full flex items-center justify-center space-x-2 py-3 rounded-2xl bg-[#88A788] hover:bg-[#759475] active:scale-98 text-white text-xs font-bold transition-all shadow-md shadow-[#88A788]/20 cursor-pointer"
+                  className="btn-primary w-full flex items-center justify-center space-x-2 py-3.5 rounded-xl text-white text-xs font-bold transition-all shadow-xs cursor-pointer"
                 >
                   {saving ? (
                     <span>Saving and calculating load...</span>

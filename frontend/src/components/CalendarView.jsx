@@ -17,38 +17,38 @@ import TaskEditModal from './TaskEditModal';
 
 const CATEGORY_STYLES = {
   academic: {
-    bg: 'bg-blue-50',
-    text: 'text-blue-700',
-    border: 'border-blue-200',
-    dot: 'bg-blue-500',
+    bg: 'bg-[#EBF4FB]',
+    text: 'text-[#2B6CB0]',
+    border: 'border-[#2B6CB0]/30',
+    dot: 'bg-[#2B6CB0]',
     label: 'Academic'
   },
   work: {
-    bg: 'bg-purple-50',
-    text: 'text-purple-700',
-    border: 'border-purple-200',
-    dot: 'bg-purple-500',
+    bg: 'bg-[#F3EFF9]',
+    text: 'text-[#705898]',
+    border: 'border-[#705898]/30',
+    dot: 'bg-[#705898]',
     label: 'Work'
   },
   physical: {
-    bg: 'bg-[#E8EFE8]',
-    text: 'text-[#354546]',
-    border: 'border-[#C2E6CB]',
-    dot: 'bg-[#88A788]',
+    bg: 'bg-[#E3F2E9]',
+    text: 'text-[#1F6B4F]',
+    border: 'border-[#1F6B4F]/30',
+    dot: 'bg-[#1F6B4F]',
     label: 'Physical'
   },
   social: {
-    bg: 'bg-pink-50',
-    text: 'text-pink-700',
-    border: 'border-pink-200',
-    dot: 'bg-pink-500',
+    bg: 'bg-[#FCEEF0]',
+    text: 'text-[#B85D6F]',
+    border: 'border-[#B85D6F]/30',
+    dot: 'bg-[#B85D6F]',
     label: 'Social'
   },
   errand: {
-    bg: 'bg-amber-50',
-    text: 'text-amber-800',
-    border: 'border-amber-200',
-    dot: 'bg-amber-500',
+    bg: 'bg-[#FEF3C7]',
+    text: 'text-[#D97706]',
+    border: 'border-[#D97706]/30',
+    dot: 'bg-[#D97706]',
     label: 'Errands'
   }
 };
@@ -213,7 +213,7 @@ export default function CalendarView({
     const raw = tasksByDate[selectedDateStr] || [];
     return [...raw].sort((a, b) => {
       const aStart = a.start_time || a.scheduled_start;
-      const bStart = b.start_time || b.scheduled_start;
+      const bStart = b.start_time || b.scheduled_end;
       if (aStart && bStart) return aStart.localeCompare(bStart);
       if (aStart) return -1;
       if (bStart) return 1;
@@ -239,33 +239,39 @@ export default function CalendarView({
   return (
     <div className="space-y-6 animate-in fade-in">
       {/* Top Calendar Toolbar */}
-      <div className="lumora-card p-4 sm:p-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div
+        style={{
+          background: '#FFFFFF',
+          borderColor: '#D2E2D8'
+        }}
+        className="lumora-card p-4 sm:p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-xs border"
+      >
         {/* Navigation & Title */}
         <div className="flex items-center space-x-3">
           <div className="flex items-center space-x-1">
             <button
               onClick={viewMode === 'month' ? handlePrevMonth : handlePrevDay}
-              className="p-2 rounded-xl hover:bg-[#F4F1E5] text-[#354546] transition-colors cursor-pointer border border-[#E5EAE3]"
+              className="p-2 rounded-xl hover:bg-[#EDF3EE] text-[#152F26] transition-colors cursor-pointer border border-[#D2E2D8]"
               title="Previous"
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
             <button
               onClick={viewMode === 'month' ? handleNextMonth : handleNextDay}
-              className="p-2 rounded-xl hover:bg-[#F4F1E5] text-[#354546] transition-colors cursor-pointer border border-[#E5EAE3]"
+              className="p-2 rounded-xl hover:bg-[#EDF3EE] text-[#152F26] transition-colors cursor-pointer border border-[#D2E2D8]"
               title="Next"
             >
               <ChevronRight className="w-4 h-4" />
             </button>
           </div>
 
-          <h2 className="text-base sm:text-lg font-bold text-[#354546]">
+          <h2 className="text-base sm:text-lg font-bold text-[#152F26] font-display">
             {viewMode === 'month' ? monthName : selectedDayFormatted}
           </h2>
 
           <button
             onClick={handleToday}
-            className="text-xs font-semibold px-2.5 py-1 rounded-lg bg-[#F4F1E5] text-[#354546] hover:bg-[#E8EFE8] transition-colors border border-[#E2DEC9] cursor-pointer"
+            className="text-xs font-semibold px-2.5 py-1 rounded-lg bg-[#EDF3EE] text-[#152F26] hover:bg-[#E3F2E9] transition-colors border border-[#D2E2D8] cursor-pointer"
           >
             Today
           </button>
@@ -273,13 +279,13 @@ export default function CalendarView({
 
         {/* View Mode Toggle (Month vs Day) */}
         <div className="flex items-center space-x-3">
-          <div className="flex items-center bg-[#F8F9F3] p-1 rounded-xl border border-[#E5EAE3]">
+          <div className="flex items-center bg-[#EDF3EE] p-1 rounded-xl border border-[#D2E2D8]">
             <button
               onClick={() => setViewMode('month')}
               className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                 viewMode === 'month'
-                  ? 'bg-[#88A788] text-white shadow-xs'
-                  : 'text-[#798990] hover:text-[#354546]'
+                  ? 'bg-white text-[#152F26] shadow-xs'
+                  : 'text-[#638379] hover:text-[#152F26]'
               }`}
             >
               Month View
@@ -288,8 +294,8 @@ export default function CalendarView({
               onClick={() => setViewMode('day')}
               className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                 viewMode === 'day'
-                  ? 'bg-[#88A788] text-white shadow-xs'
-                  : 'text-[#798990] hover:text-[#354546]'
+                  ? 'bg-white text-[#152F26] shadow-xs'
+                  : 'text-[#638379] hover:text-[#152F26]'
               }`}
             >
               Day View
@@ -299,8 +305,8 @@ export default function CalendarView({
       </div>
 
       {/* Category Color Legend */}
-      <div className="flex items-center flex-wrap gap-3 text-xs text-[#798990] px-1">
-        <span className="font-bold text-[#354546] text-[11px] uppercase tracking-wider">Categories:</span>
+      <div className="flex items-center flex-wrap gap-3 text-xs text-[#638379] px-1">
+        <span className="font-bold text-[#152F26] text-[11px] uppercase tracking-wider">Categories:</span>
         {Object.entries(CATEGORY_STYLES).map(([key, style]) => (
           <span key={key} className="inline-flex items-center space-x-1.5 font-medium">
             <span className={`w-2 h-2 rounded-full ${style.dot}`} />
@@ -311,16 +317,22 @@ export default function CalendarView({
 
       {/* VIEW MODE: MONTH */}
       {viewMode === 'month' && (
-        <div className="lumora-card overflow-hidden border border-[#E5EAE3] shadow-xs">
+        <div
+          style={{
+            background: '#FFFFFF',
+            borderColor: '#D2E2D8'
+          }}
+          className="lumora-card overflow-hidden shadow-xs border"
+        >
           {/* Days of week header */}
-          <div className="grid grid-cols-7 border-b border-[#E5EAE3] bg-[#F8F9F3] text-center text-xs font-bold text-[#798990] py-2.5">
+          <div className="grid grid-cols-7 border-b border-[#D2E2D8] bg-[#EDF3EE] text-center text-xs font-bold text-[#152F26] py-2.5">
             {DAYS_OF_WEEK.map((day) => (
               <div key={day} className="tracking-wider">{day}</div>
             ))}
           </div>
 
           {/* Month Day Cells Grid */}
-          <div className="grid grid-cols-7 divide-x divide-y divide-[#E5EAE3]">
+          <div className="grid grid-cols-7 divide-x divide-y divide-[#D2E2D8]">
             {calendarDays.map((dayObj, index) => {
               const dayTasks = tasksByDate[dayObj.dateKey] || [];
               const isToday = dayObj.dateKey === todayStr;
@@ -333,27 +345,27 @@ export default function CalendarView({
                   className={`min-h-[105px] sm:min-h-[125px] p-2 sm:p-2.5 transition-colors cursor-pointer flex flex-col justify-between ${
                     dayObj.isCurrentMonth
                       ? isToday
-                        ? 'bg-[#E8EFE8]/40 hover:bg-[#E8EFE8]/70'
-                        : 'bg-white hover:bg-[#F8F9F3]'
-                      : 'bg-slate-50/50 text-slate-400 opacity-60 hover:opacity-90'
-                  } ${isSelected ? 'ring-2 ring-inset ring-[#88A788]' : ''}`}
+                        ? 'bg-[#E3F2E9]/60 hover:bg-[#E3F2E9]'
+                        : 'bg-white hover:bg-[#EDF3EE]/70'
+                      : 'bg-[#EDF3EE]/50 text-[#638379]/60 opacity-60 hover:opacity-90'
+                  } ${isSelected ? 'ring-2 ring-inset ring-[#1F6B4F]' : ''}`}
                 >
                   {/* Date Header inside cell */}
                   <div className="flex items-center justify-between mb-1">
                     <span
                       className={`text-xs font-bold w-6 h-6 rounded-full flex items-center justify-center transition-all ${
                         isToday
-                          ? 'bg-[#88A788] text-white shadow-xs font-extrabold'
+                          ? 'bg-[#1F6B4F] text-white shadow-xs font-extrabold'
                           : dayObj.isCurrentMonth
-                          ? 'text-[#354546]'
-                          : 'text-slate-400'
+                          ? 'text-[#152F26]'
+                          : 'text-[#638379]/70'
                       }`}
                     >
                       {dayObj.date.getDate()}
                     </span>
 
                     {dayTasks.length > 0 && (
-                      <span className="text-[10px] font-semibold text-[#798990]">
+                      <span className="text-[10px] font-semibold text-[#638379]">
                         {dayTasks.length} {dayTasks.length === 1 ? 'task' : 'tasks'}
                       </span>
                     )}
@@ -386,14 +398,14 @@ export default function CalendarView({
                           )}
                           <span className="truncate">{task.title}</span>
                           {Boolean(task.is_protected) && (
-                            <Shield className="w-2.5 h-2.5 text-[#88A788] shrink-0" />
+                            <Shield className="w-2.5 h-2.5 text-[#D97706] shrink-0" />
                           )}
                         </div>
                       );
                     })}
 
                     {dayTasks.length > 3 && (
-                      <p className="text-[10px] font-bold text-[#88A788] pl-1 pt-0.5">
+                      <p className="text-[10px] font-bold text-[#1F6B4F] pl-1 pt-0.5">
                         +{dayTasks.length - 3} more
                       </p>
                     )}
@@ -411,19 +423,19 @@ export default function CalendarView({
           <div className="flex items-center justify-between">
             <button
               onClick={() => setViewMode('month')}
-              className="inline-flex items-center space-x-1.5 text-xs font-bold text-[#88A788] hover:text-[#759475] transition-colors cursor-pointer"
+              className="inline-flex items-center space-x-1.5 text-xs font-bold text-[#1F6B4F] hover:text-[#16533D] transition-colors cursor-pointer"
             >
               <ArrowLeft className="w-3.5 h-3.5" />
               <span>Back to Month View</span>
             </button>
 
             <div className="flex items-center space-x-3">
-              <span className="text-xs text-[#798990] font-medium hidden sm:inline">
+              <span className="text-xs text-[#638379] font-medium hidden sm:inline">
                 {selectedDayTasks.length} {selectedDayTasks.length === 1 ? 'commitment' : 'commitments'} scheduled
               </span>
               <button
                 onClick={() => openCaptureWithDate(selectedDateStr)}
-                className="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-[#88A788] hover:bg-[#759475] text-white text-xs font-bold transition-all shadow-xs cursor-pointer"
+                className="btn-primary flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-white text-xs font-bold transition-all shadow-xs cursor-pointer"
               >
                 <Plus className="w-3.5 h-3.5" />
                 <span>Add Activity</span>
@@ -440,17 +452,17 @@ export default function CalendarView({
                 return (
                   <div
                     key={task.id}
-                    className={`lumora-card p-4 sm:p-5 flex items-start justify-between gap-4 transition-all ${
-                      isDone ? 'opacity-55 bg-[#F8F9F3]' : 'bg-white'
+                    className={`lumora-card p-4 sm:p-5 flex items-start justify-between gap-4 transition-all bg-white border border-[#D2E2D8] shadow-xs ${
+                      isDone ? 'opacity-55 bg-[#EDF3EE]/60' : 'hover:border-[#1F6B4F]/60'
                     }`}
                   >
                     <div className="flex items-start space-x-3 flex-1 min-w-0">
                       <button
                         onClick={() => toggleComplete(task)}
-                        className="mt-0.5 text-[#798990] hover:text-[#88A788] transition-colors cursor-pointer"
+                        className="mt-0.5 text-[#638379]/50 hover:text-[#1F6B4F] transition-colors cursor-pointer"
                       >
                         {isDone ? (
-                          <CheckCircle2 className="w-5 h-5 text-[#88A788] fill-[#E8EFE8]" />
+                          <CheckCircle2 className="w-5 h-5 text-[#1F6B4F] fill-[#E3F2E9]" />
                         ) : (
                           <Circle className="w-5 h-5" />
                         )}
@@ -460,20 +472,20 @@ export default function CalendarView({
                         <div className="flex items-center space-x-2">
                           <span
                             className={`text-sm font-bold truncate ${
-                              isDone ? 'line-through text-slate-400' : 'text-[#354546]'
+                              isDone ? 'line-through text-[#638379]' : 'text-[#152F26]'
                             }`}
                           >
                             {task.title}
                           </span>
 
                           {Boolean(task.is_protected) && (
-                            <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-[#B3E8C0] text-[#354546] border border-[#94B094]">
+                            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#FAF6EC] text-[#645233] border border-[#DFD6C3]">
                               Shielded Focus
                             </span>
                           )}
                         </div>
 
-                        <div className="flex flex-wrap items-center gap-2 text-xs text-[#798990]">
+                        <div className="flex flex-wrap items-center gap-2 text-xs text-[#638379]">
                           <span
                             className={`capitalize px-2 py-0.5 rounded-md font-medium border ${catStyle.bg} ${catStyle.text} ${catStyle.border}`}
                           >
@@ -481,7 +493,7 @@ export default function CalendarView({
                           </span>
 
                           <span className="flex items-center space-x-1">
-                            <Clock className="w-3 h-3 text-[#88A788]" />
+                            <Clock className="w-3 h-3 text-[#638379]" />
                             <span>
                               {(task.start_time || task.scheduled_start) && (task.end_time || task.scheduled_end)
                                 ? `${task.start_time || task.scheduled_start} - ${task.end_time || task.scheduled_end} (~${task.estimated_hours}h anchor)`
@@ -492,7 +504,7 @@ export default function CalendarView({
                           <span className="capitalize">{task.priority} Priority</span>
 
                           {task.flexibility === 'high' && (
-                            <span className="text-[#88A788] font-semibold">High Flexibility</span>
+                            <span className="text-[#1F6B4F] font-semibold">High Flexibility</span>
                           )}
                         </div>
                       </div>
@@ -504,14 +516,14 @@ export default function CalendarView({
                           e.stopPropagation();
                           setEditingTask(task);
                         }}
-                        className="p-1.5 text-slate-400 hover:text-[#88A788] hover:bg-[#E8EFE8] rounded-lg transition-colors cursor-pointer"
+                        className="p-1.5 text-[#638379] hover:text-[#152F26] hover:bg-[#EDF3EE] rounded-lg transition-colors cursor-pointer"
                         title="Edit Activity"
                       >
                         <Edit3 className="w-4 h-4" />
                       </button>
                       <button
                         onClick={() => handleDelete(task.id)}
-                        className="p-1.5 text-slate-300 hover:text-rose-500 rounded-lg hover:bg-rose-50 transition-colors cursor-pointer"
+                        className="p-1.5 text-[#638379]/50 hover:text-rose-500 rounded-lg hover:bg-rose-50 transition-colors cursor-pointer"
                         title="Remove task"
                       >
                         <Trash2 className="w-4 h-4" />
@@ -522,17 +534,17 @@ export default function CalendarView({
               })}
             </div>
           ) : (
-            <div className="lumora-card p-12 text-center text-slate-400 space-y-3">
-              <CalendarIcon className="w-8 h-8 mx-auto text-[#88A788]/60" />
-              <p className="text-sm font-semibold text-[#354546]">No tasks scheduled for this day.</p>
-              <p className="text-xs text-[#798990]">
+            <div className="lumora-card p-12 text-center text-[#638379] space-y-3 bg-white border border-[#D2E2D8]">
+              <CalendarIcon className="w-8 h-8 mx-auto text-[#1F6B4F]/60" />
+              <p className="text-sm font-semibold text-[#152F26]">No tasks scheduled for this day.</p>
+              <p className="text-xs text-[#638379]">
                 {selectedCategory !== 'all'
                   ? `No ${selectedCategory} tasks found for ${selectedDayFormatted}.`
                   : 'Your capacity is clear for this date.'}
               </p>
               <button
                 onClick={() => openCaptureWithDate(selectedDateStr)}
-                className="inline-flex items-center space-x-1.5 px-4 py-2 rounded-xl bg-[#88A788] hover:bg-[#759475] text-white text-xs font-bold transition-all shadow-xs cursor-pointer mt-2"
+                className="btn-primary inline-flex items-center space-x-1.5 px-4 py-2 rounded-xl text-white text-xs font-bold transition-all shadow-xs cursor-pointer mt-2"
               >
                 <Plus className="w-4 h-4" />
                 <span>Schedule a Task</span>

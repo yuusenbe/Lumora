@@ -4,6 +4,7 @@ import { api } from './api/client';
 import Navbar from './components/Navbar';
 import SmartCaptureModal from './components/SmartCaptureModal';
 import RebalanceModal from './components/RebalanceModal';
+import WhatIfSidebarChat from './components/WhatIfSidebarChat';
 
 // Pages
 import LandingPage from './pages/LandingPage';
@@ -32,6 +33,7 @@ function MainApp() {
   } = useAuth();
 
   const [capacityData, setCapacityData] = useState(null);
+  const [whatIfSidebarOpen, setWhatIfSidebarOpen] = useState(false);
 
   const fetchCapacity = async () => {
     try {
@@ -53,7 +55,7 @@ function MainApp() {
   const isPublicPage = currentView === 'landing' || currentView === 'login' || currentView === 'signup';
 
   return (
-    <div className="min-h-screen bg-[#F8FAF9] flex flex-col selection:bg-teal-100 selection:text-teal-900">
+    <div className="min-h-screen bg-[#EBF7E9] flex flex-col selection:bg-[#E3F2E9] selection:text-[#152F26]">
       {/* Top Navigation */}
       {!isPublicPage && (
         <Navbar
@@ -76,6 +78,15 @@ function MainApp() {
         {currentView === 'recovery' && <RecoveryPage />}
         {currentView === 'whatif' && <WhatIfPage />}
       </main>
+
+      {/* Floating What-If Chat Assistant & Slide-over for Website / Tab screen */}
+      {!isPublicPage && (
+        <WhatIfSidebarChat
+          isOpen={whatIfSidebarOpen}
+          onToggle={() => setWhatIfSidebarOpen(!whatIfSidebarOpen)}
+          onClose={() => setWhatIfSidebarOpen(false)}
+        />
+      )}
 
       {/* Global Modals */}
       <SmartCaptureModal
