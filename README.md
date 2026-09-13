@@ -19,9 +19,9 @@
 **Project Name**: Lumora  
 **Team**: Nur Aleya Binti Muhammad Hafeez & Rina Syazana Binti Rahman  
 **Problem Statement**: Stress & Workload Manager  
-**Video Presentation**: [Unlisted YouTube Video Link](https://youtube.com) *(Insert Video Link Here)*  
-**Presentation Slides**: [Public Presentation Slides Link](https://canva.com) *(Insert Slides Link Here)*  
-**UI Prototype / Live Demo**: [http://localhost:5173](http://localhost:5173)  
+**Video Presentation**: [Unlisted YouTube Video Link](https://youtu.be/rTSTv5_J3HM?si=8cKCWk8ARzjgc5gi) *(Insert Video Link Here)*  
+**Presentation Slides**: [Public Presentation Slides Link](https://canva.link/209ygsdv7ul2evl) *(Insert Slides Link Here)*  
+**UI Prototype / Live Demo**: [https://lumora-autopilot.vercel.app/](https://lumora-autopilot.vercel.app/)  
 
 ---
 
@@ -188,7 +188,7 @@ During our dedicated consultation session, **Chua Zhu Heng** provided strategic 
 
 ## 3. Design & Prototype
 
-**UI Prototype / Web Application**: [http://localhost:5173](http://localhost:5173)  
+**UI Prototype / Web Application**: [https://lumora-autopilot.vercel.app/](https://lumora-autopilot.vercel.app/)  
 *(Screenshots below showcase the live high-fidelity interface)*
 
 ### 3.1 Key User Interface Screens
@@ -397,7 +397,7 @@ The project scope was intentionally structured to ensure high technical depth, r
 
 **Target Duration**: 4 minutes 30 seconds (Max 5:00)  
 **Platform**: YouTube (Unlisted)  
-**Slide Deck**: [Public Slides Link](https://canva.com) *(Insert Slides Link Here)*
+**Slide Deck**: [Public Slides Link](https://canva.link/209ygsdv7ul2evl) *(Insert Slides Link Here)*
 
 ### Recommended Video Flow:
 1. **0:00 – 0:45 | The Hook & The Problem**
@@ -439,16 +439,16 @@ cd Lumora
 
 # 2. Start Backend Server
 python backend_server.py
-# Backend runs at http://localhost:8000
+# Backend runs at https://lumora-autopilot.vercel.app/
 
 # 3. In a new terminal, start Frontend
 cd frontend
 npm install
 npm run dev
-# Frontend runs at http://localhost:5173
+# Frontend runs at https://lumora-autopilot.vercel.app/
 ```
 
-Open your browser at **`http://localhost:5173`** and click **"Launch Live Demo"** to explore as Alex Chen!
+Open your browser at **`https://lumora-autopilot.vercel.app/`** and click **"Launch Live Demo"** to explore as Alex Chen!
 
 ---
 
