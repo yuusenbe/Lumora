@@ -3,9 +3,21 @@ import aiosqlite
 import json
 from pathlib import Path
 
-DB_PATH = Path(__file__).resolve().parent.parent / "lumora.db"
+if os.environ.get("VERCEL"):
+    DB_PATH = Path("/tmp/lumora.db")
+else:
+    DB_PATH = Path(__file__).resolve().parent.parent / "lumora.db"
 
 async def get_db():
+    if os.environ.get("VERCEL") and not DB_PATH.exists():
+        # Auto-initialize database on serverless cold-start
+        db = await aiosqlite.connect(DB_PATH)
+        db.row_factory = aiosqlite.Row
+        await db.close()
+        await init_db()
+        from .seed_data import seed_demo_data
+        await seed_demo_data(force=True)
+
     db = await aiosqlite.connect(DB_PATH)
     db.row_factory = aiosqlite.Row
     return db
