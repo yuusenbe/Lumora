@@ -8,7 +8,7 @@ load_dotenv()
 
 from .database.connection import init_db
 from .database.seed_data import seed_demo_data
-from .api import auth, dashboard, tasks, checkins, rebalance, recovery, whatif
+from .api import auth, dashboard, tasks, checkins, rebalance, recovery, whatif, telegram
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -41,6 +41,7 @@ app.include_router(checkins.router, prefix="/api")
 app.include_router(rebalance.router, prefix="/api")
 app.include_router(recovery.router, prefix="/api")
 app.include_router(whatif.router, prefix="/api")
+app.include_router(telegram.router, prefix="/api")
 
 @app.get("/api/health")
 async def health_check():

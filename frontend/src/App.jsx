@@ -4,6 +4,7 @@ import { api } from './api/client';
 import Navbar from './components/Navbar';
 import SmartCaptureModal from './components/SmartCaptureModal';
 import RebalanceModal from './components/RebalanceModal';
+import TelegramModal from './components/TelegramModal';
 import WhatIfSidebarChat from './components/WhatIfSidebarChat';
 
 // Pages
@@ -34,6 +35,7 @@ function MainApp() {
 
   const [capacityData, setCapacityData] = useState(null);
   const [whatIfSidebarOpen, setWhatIfSidebarOpen] = useState(false);
+  const [telegramModalOpen, setTelegramModalOpen] = useState(false);
 
   const fetchCapacity = async () => {
     try {
@@ -61,6 +63,7 @@ function MainApp() {
         <Navbar
           capacityData={capacityData}
           onRefresh={fetchCapacity}
+          onOpenTelegram={() => setTelegramModalOpen(true)}
         />
       )}
 
@@ -106,6 +109,11 @@ function MainApp() {
           fetchCapacity();
           triggerRefresh();
         }}
+      />
+
+      <TelegramModal
+        isOpen={telegramModalOpen}
+        onClose={() => setTelegramModalOpen(false)}
       />
     </div>
   );

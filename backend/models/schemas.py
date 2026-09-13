@@ -190,3 +190,24 @@ class ParsedTaskResponse(BaseModel):
     is_time_specific: bool = False
     recommended_slots: Optional[List[RecommendedSlot]] = None
 
+class TelegramLinkCodeResponse(BaseModel):
+    code: str
+    bot_username: str
+    deep_link: str
+    expires_in_minutes: int
+
+class TelegramStatusResponse(BaseModel):
+    is_connected: bool
+    telegram_username: Optional[str] = None
+    telegram_user_id: Optional[int] = None
+    bot_username: str
+    connected_at: Optional[str] = None
+
+class TelegramSetWebhookRequest(BaseModel):
+    webhook_url: Optional[str] = None
+
+class TelegramSetWebhookResponse(BaseModel):
+    success: bool
+    message: str
+    webhook_url: Optional[str] = None
+

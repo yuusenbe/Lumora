@@ -18,11 +18,12 @@ import {
   Menu,
   X,
   Plus,
-  ChevronRight
+  ChevronRight,
+  Send
 } from 'lucide-react';
 import { api } from '../api/client';
 
-export default function Navbar({ capacityData, onRefresh }) {
+export default function Navbar({ capacityData, onRefresh, onOpenTelegram }) {
   const {
     currentView,
     setCurrentView,
@@ -245,6 +246,16 @@ export default function Navbar({ capacityData, onRefresh }) {
                 <span className="text-[#638379] text-[11px] font-medium hidden sm:inline">{status}</span>
               </div>
 
+              {/* Telegram Quick Access Button */}
+              <button
+                onClick={onOpenTelegram}
+                className="flex items-center space-x-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl border border-[#C2E2D0] bg-[#F0F9F4] hover:bg-[#E3F2E9] text-[#1F6B4F] text-xs font-semibold transition-all cursor-pointer shadow-2xs group"
+                title="Telegram Quick Access Bot"
+              >
+                <Send className="w-3.5 h-3.5 text-[#1F6B4F] transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                <span className="hidden md:inline">Telegram</span>
+              </button>
+
               {/* Smart Capture Button */}
               <button
                 onClick={() => setSmartCaptureOpen(true)}
@@ -428,6 +439,20 @@ export default function Navbar({ capacityData, onRefresh }) {
               {/* Mobile Quick Demo Triggers */}
               <div className="pt-2 border-t border-[#D2E2D8] space-y-2">
                 <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#638379] px-3 block">
+                  Quick Access
+                </span>
+                <button
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    if (onOpenTelegram) onOpenTelegram();
+                  }}
+                  className="w-full flex items-center space-x-2.5 px-3 py-2 rounded-xl bg-[#F0F9F4] text-[#1F6B4F] text-xs font-semibold hover:bg-[#E3F2E9] transition-colors cursor-pointer border border-[#C2E2D0]"
+                >
+                  <Send className="w-4 h-4 shrink-0 text-[#1F6B4F]" />
+                  <span>Connect Telegram Bot</span>
+                </button>
+
+                <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#638379] px-3 block pt-1">
                   Demo Shortcuts
                 </span>
                 <button

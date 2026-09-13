@@ -238,5 +238,29 @@ export const api = {
       body: JSON.stringify({ scenario })
     });
     return handleResponse(res);
+  },
+
+  // Telegram Integration
+  getTelegramStatus: async () => {
+    const res = await fetch(`${API_BASE}/telegram/status`, {
+      headers: getAuthHeader()
+    });
+    return handleResponse(res);
+  },
+
+  generateTelegramLinkCode: async () => {
+    const res = await fetch(`${API_BASE}/telegram/generate-link-code`, {
+      method: 'POST',
+      headers: getAuthHeader()
+    });
+    return handleResponse(res);
+  },
+
+  unlinkTelegram: async () => {
+    const res = await fetch(`${API_BASE}/telegram/unlink`, {
+      method: 'POST',
+      headers: getAuthHeader()
+    });
+    return handleResponse(res);
   }
 };

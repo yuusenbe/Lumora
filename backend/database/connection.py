@@ -104,6 +104,36 @@ async def init_db():
         );
         """)
 
+        await db.execute("""
+        CREATE TABLE IF NOT EXISTS telegram_accounts (
+            id TEXT PRIMARY KEY,
+            user_id TEXT NOT NULL,
+            telegram_user_id INTEGER UNIQUE NOT NULL,
+            telegram_username TEXT,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (user_id) REFERENCES users(id)
+        );
+        """)
+
+        await db.execute("""
+        CREATE TABLE IF NOT EXISTS telegram_linking_codes (
+            code TEXT PRIMARY KEY,
+            user_id TEXT NOT NULL,
+            expires_at TIMESTAMP NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (user_id) REFERENCES users(id)
+        );
+        """)
+
+        await db.execute("""
+        CREATE TABLE IF NOT EXISTS telegram_conversation_states (
+            telegram_user_id INTEGER PRIMARY KEY,
+            state TEXT NOT NULL,
+            data TEXT,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+        """)
+
         await db.commit()
     finally:
         await db.close()
