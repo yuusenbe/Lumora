@@ -19,8 +19,8 @@
 **Project Name**: Lumora  
 **Team**: Matcha & Coffee by Nur Aleya Binti Muhammad Hafeez & Rina Syazana Binti Rahman  
 **Problem Statement**: Stress & Workload Manager  
-**Video Presentation**: [Unlisted YouTube Video Link](https://youtu.be/rTSTv5_J3HM?si=8cKCWk8ARzjgc5gi) *(Insert Video Link Here)*  
-**Presentation Slides**: [Public Presentation Slides Link](https://canva.link/209ygsdv7ul2evl) *(Insert Slides Link Here)*  
+**Video Presentation**: [Unlisted YouTube Video Link](https://youtu.be/rTSTv5_J3HM?si=8cKCWk8ARzjgc5gi)  
+**Presentation Slides**: [Public Presentation Slides Link](https://canva.link/209ygsdv7ul2evl)   
 **UI Prototype / Live Demo**: [https://lumora-autopilot.vercel.app/](https://lumora-autopilot.vercel.app/)  
 
 ---
